@@ -1,0 +1,12 @@
+{
+  "actions": [
+    {"name": "repeat visual inspection", "cost": 1, "outcomes": ["clear", "finding"]},
+    {"name": "repeat critical dimension measurement", "cost": 1, "outcomes": ["clear", "finding"]},
+    {"name": "review the chamber trace", "cost": 1, "outcomes": ["clear", "finding"]},
+    {"name": "verify sensor calibration", "cost": 1, "outcomes": ["clear", "finding"]},
+    {"name": "check the gas line", "cost": 1, "outcomes": ["clear", "finding"]},
+    {"name": "verify temperature control", "cost": 1, "outcomes": ["clear", "finding"]},
+    {"name": "review wafer handling", "cost": 1, "outcomes": ["clear", "finding"]},
+    {"name": "check inspection-system calibration", "cost": 1, "outcomes": ["clear", "finding"]}
+  ]
+}

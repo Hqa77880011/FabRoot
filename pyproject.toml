@@ -1,0 +1,19 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "FabRoot"
+version = "0.1.0"
+description = "FabRoot implementation"
+requires-python = ">=3.11"
+dependencies = ["numpy>=1.24", "scipy>=1.11", "torch>=2.2", "scikit-learn>=1.3", "matplotlib>=3.8"]
+
+[project.optional-dependencies]
+vision = ["transformers>=4.48,<5", "Pillow>=10"]
+
+[project.scripts]
+fabroot = "fabroot.cli:main"
+
+[tool.setuptools.packages.find]
+include = ["fabroot*"]
