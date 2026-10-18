@@ -111,3 +111,15 @@ fabroot workflow --source technician_trials.csv --reference baseline --output ou
 ```
 
 This reports interface means and participant-paired differences, 10,000 participant bootstrap intervals, Wilcoxon p-values, and Holm-adjusted p-values across the compared endpoints. It does not synthesize technician performance from classifier accuracy. Repeat the model runs with seeds 11/23/37/51/71 and use lot-level paired event resampling for model comparisons.
+
+## Fixed reproduction setting
+
+Precomputed 768-dimensional image features plus aligned text/metrology/wafer facts; lot/time-disjoint CPU training50 epochs seed11 and train-only action likelihoods.
+
+The checked-in entry point fixes data seeds, methods, budgets and output paths. Inspect its commands without starting any computation:
+
+```bash
+python reproduce.py --plan --source data/source
+```
+
+Remove `--plan` to execute the registered pipeline in a fresh output directory. The entry point calls the existing implementation; it does not insert paper results. Installation uses the package instructions above.
