@@ -114,12 +114,13 @@ This reports interface means and participant-paired differences, 10,000 particip
 
 ## Fixed reproduction setting
 
-Precomputed 768-dimensional image features plus aligned text/metrology/wafer facts; lot/time-disjoint CPU training50 epochs seed11 and train-only action likelihoods.
-
-The checked-in entry point fixes data seeds, methods, budgets and output paths. Inspect its commands without starting any computation:
+The finite manufacturing setting creates actual wafer PNGs plus 64 noisy sensor measurements, channel alarms, process text and inspection outcomes. Eight independently sampled physical intervention types define cause annotations. Images vary through dose/particles/alignment/flow/temperature/scratches/stray light; sensor calibration changes the measurement channel. Labels and signed evidence annotations supervise losses/evaluation, while model inputs are observations. Train/validation/test contain 48/16/16 events in chronological order with disjoint lots.
 
 ```bash
-python reproduce.py --plan --source data/source
+python reproduce.py --plan
+python reproduce.py --output outputs/finite-setting
 ```
 
-Remove `--plan` to execute the registered pipeline in a fresh output directory. The entry point calls the existing implementation; it does not insert paper results. Installation uses the package instructions above.
+`finite_data.py --output outputs/finite-setting/generated --seed 11` creates `events.json` and images. Existing `fabroot prepare --image-encoder finite_texture` extracts four actual RGB patches (each 768 values), aligns event keys/time, fits training-only vocabularies and sensor normalization, then full/early_concat models train for 50 epochs with seed 11. This fixed pixel encoder requires no pretrained weights. The optional CLIP image path remains available through the native prepare CLI.
+
+The finite computational endpoints are diagnosis, signed-evidence retrieval, grounded typed reports and inspection selection. Human technician time and independent engineer judgments remain observational endpoints requiring actual participants; the finite source does not fabricate those ratings.

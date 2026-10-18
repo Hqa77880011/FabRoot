@@ -150,11 +150,11 @@ def prepare(args):
             raise ValueError("Retained evidence IDs must be unique within an event")
         for record in selected:
             if record["type"] == "image":
-                if not args.clip_path:
+                if args.image_encoder == "clip" and not args.clip_path:
                     raise ValueError(
                         "Image preparation requires a local CLIP ViT-B/16 model directory via --clip-path"
                     )
-                if vision is None:
+                if args.image_encoder == "clip" and vision is None:
                     from transformers import CLIPImageProcessor, CLIPVisionModel
 
                     vision = CLIPVisionModel.from_pretrained(
@@ -166,13 +166,17 @@ def prepare(args):
                 from PIL import Image
 
                 image_path = Path(args.source).parent / record["path"]
-                with Image.open(image_path) as image:
-                    inputs = processor(images=image.convert("RGB"), return_tensors="pt")
-                with torch.no_grad():
-                    feature = vision(**inputs).last_hidden_state[0].numpy()
+                if args.image_encoder == "finite_texture":
+                    from .finite_visual import texture_tokens
+                    feature = texture_tokens(image_path)
+                else:
+                    with Image.open(image_path) as image:
+                        inputs = processor(images=image.convert("RGB"), return_tensors="pt")
+                    with torch.no_grad():
+                        feature = vision(**inputs).last_hidden_state[0].numpy()
                 if feature.shape[1] != 768:
                     raise ValueError(
-                        "The visual backbone must provide 768-wide ViT-B/16 features"
+                        "The visual encoder must provide 768-wide tokens"
                     )
                 relative = f"images/region_{sum(len(e['records']) for e in prepared)}_{len(accepted)}_{selected.index(record)}.npy"
                 np.save(root / relative, feature.astype(np.float32))
@@ -838,6 +842,7 @@ def main():
     p.add_argument("--source", required=True)
     p.add_argument("--output", required=True)
     p.add_argument("--clip-path")
+    p.add_argument("--image-encoder", choices=["clip", "finite_texture"], default="clip")
     p.add_argument("--allow-foreign", action="store_true")
     p.add_argument("--vocabulary-size", type=int, default=20000)
     p = sub.add_parser("train")
